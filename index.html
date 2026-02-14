@@ -24,13 +24,15 @@
           radial-gradient(700px 400px at 90% 10%, rgba(255, 255, 255, 0.06), transparent),
           var(--bg);
         color: var(--text);
+        /* Prevent accidental scroll on mobile */
+        overflow: hidden;
       }
       .wrap {
         width: 100%;
         max-width: none;
         margin: 0;
-        padding: 44px 16px 24px;
-        min-height: 100vh;
+        padding: 44px 16px 20px;
+        height: 100svh;
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
@@ -86,7 +88,8 @@
         font-size: 14px;
         line-height: 1.35;
         min-height: 58px;
-        resize: vertical;
+        /* Resizing can introduce scroll; keep layout stable */
+        resize: none;
       }
       textarea:focus {
         border-color: rgba(255, 255, 255, 0.22);
