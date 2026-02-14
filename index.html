@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WhatsApp UTM Builder</title>
+    <meta name="description" content="Paste a URL and append ?utm_source=whatsapp&utm_medium=status" />
+    <style>
+      :root {
+        --bg: #0b0b0c;
+        --panel: rgba(255, 255, 255, 0.06);
+        --panel-2: rgba(255, 255, 255, 0.04);
+        --border: rgba(255, 255, 255, 0.10);
+        --text: rgba(255, 255, 255, 0.92);
+        --muted: rgba(255, 255, 255, 0.62);
+        --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+        --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+          Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        --radius: 12px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: var(--sans);
+        background: radial-gradient(900px 500px at 20% -10%, rgba(255, 255, 255, 0.08), transparent),
+          radial-gradient(700px 400px at 90% 10%, rgba(255, 255, 255, 0.06), transparent),
+          var(--bg);
+        color: var(--text);
+      }
+
+      .wrap {
+        max-width: 840px;
+        margin: 0 auto;
+        padding: 28px 18px 80px;
+      }
+
+      .top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      h1 {
+        font-size: 20px;
+        margin: 0;
+        letter-spacing: -0.02em;
+      }
+
+      .sub {
+        margin: 6px 0 0;
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.45;
+      }
+
+      .pill {
+        border: 1px solid var(--border);
+        background: var(--panel-2);
+        padding: 7px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+
+      .card {
+        margin-top: 18px;
+        border: 1px solid var(--border);
+        background: var(--panel);
+        border-radius: var(--radius);
+        padding: 14px;
+      }
+
+      label {
+        display: block;
+        font-size: 12px;
+        color: var(--muted);
+        margin-bottom: 8px;
+      }
+
+      textarea,
+      input {
+        width: 100%;
+        border: 1px solid var(--border);
+        background: rgba(0, 0, 0, 0.18);
+        border-radius: 10px;
+        padding: 12px;
+        color: var(--text);
+        outline: none;
+        font-family: var(--mono);
+        font-size: 13px;
+        line-height: 1.35;
+      }
+
+      textarea:focus,
+      input:focus {
+        border-color: rgba(255, 255, 255, 0.22);
+        box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.06);
+      }
+
+      textarea {
+        min-height: 70px;
+        resize: vertical;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      @media (min-width: 740px) {
+        .row {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      button {
+        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--text);
+        border-radius: 10px;
+        padding: 10px 12px;
+        font-size: 13px;
+        cursor: pointer;
+      }
+
+      button.primary {
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      button:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+
+      .out {
+        margin-top: 14px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        padding-top: 14px;
+      }
+
+      .hint {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.45;
+      }
+
+      .status {
+        margin-top: 10px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .status.error {
+        color: rgba(255, 170, 170, 0.9);
+      }
+
+      .footer {
+        margin-top: 22px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      a {
+        color: inherit;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="top">
+        <div>
+          <h1>WhatsApp UTM Builder</h1>
+          <p class="sub">
+            Paste any link → get the same link with
+            <span style="font-family: var(--mono)">utm_source=whatsapp</span> and
+            <span style="font-family: var(--mono)">utm_medium=status</span>.
+            Existing query params are preserved.
+          </p>
+        </div>
+        <div class="pill">default: whatsapp · status</div>
+      </div>
+
+      <div class="card">
+        <div class="row">
+          <div>
+            <label for="inputUrl">URL</label>
+            <textarea id="inputUrl" placeholder="https://example.com/page"></textarea>
+          </div>
+          <div>
+            <label>UTM params (fixed)</label>
+            <div class="row" style="grid-template-columns: 1fr; gap: 10px">
+              <input id="utmSource" value="whatsapp" disabled />
+              <input id="utmMedium" value="status" disabled />
+            </div>
+            <div class="hint">
+              This tool always sets these two params. If the input already has
+              <span style="font-family: var(--mono)">utm_source</span> or
+              <span style="font-family: var(--mono)">utm_medium</span>, they will
+              be overwritten.
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="primary" id="btnBuild">Build link</button>
+          <button id="btnCopy" disabled>Copy</button>
+          <button id="btnClear">Clear</button>
+        </div>
+
+        <div class="out">
+          <label for="outputUrl">Output</label>
+          <textarea id="outputUrl" placeholder="Generated link will appear here" readonly></textarea>
+          <div class="status" id="status"></div>
+          <div class="hint">
+            Tip: In WhatsApp Status, paste this output link. It will look normal
+            but will include UTM tracking.
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        Built for quick UTM tagging. No tracking happens here; it only edits the
+        URL.
+      </div>
+    </div>
+
+    <script>
+      const elIn = document.getElementById('inputUrl')
+      const elOut = document.getElementById('outputUrl')
+      const elStatus = document.getElementById('status')
+      const btnBuild = document.getElementById('btnBuild')
+      const btnCopy = document.getElementById('btnCopy')
+      const btnClear = document.getElementById('btnClear')
+
+      function setStatus(msg, kind = 'info') {
+        elStatus.textContent = msg || ''
+        elStatus.className = 'status' + (kind === 'error' ? ' error' : '')
+      }
+
+      function buildUrl(raw) {
+        const trimmed = String(raw || '').trim()
+        if (!trimmed) throw new Error('Paste a URL first')
+
+        let u
+        try {
+          u = new URL(trimmed)
+        } catch {
+          // Try adding https:// if user pasted without scheme
+          u = new URL('https://' + trimmed)
+        }
+
+        u.searchParams.set('utm_source', 'whatsapp')
+        u.searchParams.set('utm_medium', 'status')
+
+        return u.toString()
+      }
+
+      function onBuild() {
+        try {
+          const out = buildUrl(elIn.value)
+          elOut.value = out
+          btnCopy.disabled = false
+          setStatus('Ready')
+        } catch (e) {
+          btnCopy.disabled = true
+          elOut.value = ''
+          setStatus(e?.message || 'Invalid URL', 'error')
+        }
+      }
+
+      async function onCopy() {
+        if (!elOut.value) return
+        try {
+          await navigator.clipboard.writeText(elOut.value)
+          setStatus('Copied to clipboard')
+        } catch {
+          // fallback
+          elOut.focus()
+          elOut.select()
+          document.execCommand('copy')
+          setStatus('Copied')
+        }
+      }
+
+      function onClear() {
+        elIn.value = ''
+        elOut.value = ''
+        btnCopy.disabled = true
+        setStatus('')
+        elIn.focus()
+      }
+
+      btnBuild.addEventListener('click', onBuild)
+      btnCopy.addEventListener('click', onCopy)
+      btnClear.addEventListener('click', onClear)
+
+      // convenience: build on Ctrl/Cmd+Enter
+      elIn.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') onBuild()
+      })
+    </script>
+  </body>
+</html>
