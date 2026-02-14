@@ -31,7 +31,7 @@
         width: 100%;
         max-width: none;
         margin: 0;
-        padding: 44px 16px 20px;
+        padding: 44px 16px 36px; /* extra gap from bottom */
         height: var(--vvh, 100svh);
         display: flex;
         flex-direction: column;
@@ -105,7 +105,7 @@
       textarea {
         width: 100%;
         border: 1px solid var(--border);
-        background: rgba(0, 0, 0, 0.18);
+        background: rgba(255, 255, 255, 0.08);
         border-radius: 10px;
         padding: 16px 14px;
         color: var(--text);
@@ -116,6 +116,10 @@
         min-height: 58px;
         /* Resizing can introduce scroll; keep layout stable */
         resize: none;
+      }
+
+      textarea.filled {
+        background: rgba(255, 255, 255, 0.14);
       }
       textarea:focus {
         border-color: rgba(255, 255, 255, 0.22);
@@ -161,6 +165,8 @@
       }
       .btnSecondary {
         background: rgba(255, 255, 255, 0.06);
+        padding-left: 12px;
+        padding-right: 12px;
       }
       .footer {
         margin-top: 18px;
@@ -186,7 +192,7 @@
 
         <div class="inputRow">
           <textarea id="inputUrl" placeholder="Paste link here…"></textarea>
-          <button id="btnGo" title="Build + copy">
+          <button id="btnGo" title="Build + copy" disabled>
             <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M5 12h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
               <path d="M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -256,6 +262,7 @@
             return
           }
           elIn.value = text
+          syncInputState()
           setStatus('Pasted')
           // Optional: build immediately after paste
           // onGo()
@@ -309,8 +316,19 @@
         }
       }
 
+      function syncInputState() {
+        const has = !!elIn.value.trim()
+        btnGo.disabled = !has
+        elIn.classList.toggle('filled', has)
+      }
+
+      // initial
+      syncInputState()
+      elIn.addEventListener('input', syncInputState)
+
       async function onGo() {
         try {
+          if (btnGo.disabled) return
           const out = buildUrl(elIn.value)
           lastOut = out
           const copied = await copyToClipboard(out)
@@ -346,6 +364,7 @@
         elIn.value = ''
         lastOut = ''
         btnShare.disabled = true
+        syncInputState()
         setStatus('')
         elIn.focus()
       }
