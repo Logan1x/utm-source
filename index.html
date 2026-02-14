@@ -3,26 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>WhatsApp UTM Builder</title>
-    <meta name="description" content="Paste a URL and append ?utm_source=whatsapp&utm_medium=status" />
+    <title>WhatsApp UTM Link</title>
+    <meta name="description" content="Paste a URL → auto-copy link with ?utm_source=whatsapp&utm_medium=status" />
     <style>
       :root {
         --bg: #0b0b0c;
         --panel: rgba(255, 255, 255, 0.06);
-        --panel-2: rgba(255, 255, 255, 0.04);
-        --border: rgba(255, 255, 255, 0.10);
+        --border: rgba(255, 255, 255, 0.12);
         --text: rgba(255, 255, 255, 0.92);
         --muted: rgba(255, 255, 255, 0.62);
-        --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-          "Liberation Mono", "Courier New", monospace;
-        --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
-          Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-        --radius: 12px;
+        --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+          "Courier New", monospace;
+        --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       }
-
-      * {
-        box-sizing: border-box;
-      }
+      * { box-sizing: border-box; }
       body {
         margin: 0;
         font-family: var(--sans);
@@ -31,221 +25,134 @@
           var(--bg);
         color: var(--text);
       }
-
       .wrap {
-        max-width: 840px;
+        max-width: 900px;
         margin: 0 auto;
-        padding: 28px 18px 80px;
+        padding: 36px 18px 72px;
       }
-
-      .top {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 16px;
-      }
-
       h1 {
-        font-size: 20px;
         margin: 0;
+        font-size: 18px;
         letter-spacing: -0.02em;
       }
-
       .sub {
         margin: 6px 0 0;
         font-size: 13px;
         color: var(--muted);
         line-height: 1.45;
       }
-
-      .pill {
-        border: 1px solid var(--border);
-        background: var(--panel-2);
-        padding: 7px 10px;
-        border-radius: 999px;
-        font-size: 12px;
-        color: var(--muted);
-        white-space: nowrap;
-      }
-
       .card {
         margin-top: 18px;
         border: 1px solid var(--border);
         background: var(--panel);
-        border-radius: var(--radius);
+        border-radius: 14px;
         padding: 14px;
       }
-
-      label {
-        display: block;
-        font-size: 12px;
-        color: var(--muted);
-        margin-bottom: 8px;
+      .inputRow {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        align-items: stretch;
       }
-
-      textarea,
-      input {
+      textarea {
         width: 100%;
         border: 1px solid var(--border);
         background: rgba(0, 0, 0, 0.18);
-        border-radius: 10px;
-        padding: 12px;
+        border-radius: 12px;
+        padding: 16px 14px;
         color: var(--text);
         outline: none;
         font-family: var(--mono);
-        font-size: 13px;
+        font-size: 14px;
         line-height: 1.35;
+        min-height: 58px;
+        resize: vertical;
       }
-
-      textarea:focus,
-      input:focus {
+      textarea:focus {
         border-color: rgba(255, 255, 255, 0.22);
         box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.06);
       }
-
-      textarea {
-        min-height: 70px;
-        resize: vertical;
-      }
-
-      .row {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 12px;
-      }
-
-      @media (min-width: 740px) {
-        .row {
-          grid-template-columns: 1fr 1fr;
-        }
-      }
-
-      .actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 12px;
-      }
-
       button {
         border: 1px solid var(--border);
-        background: rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.10);
         color: var(--text);
-        border-radius: 10px;
-        padding: 10px 12px;
-        font-size: 13px;
+        border-radius: 12px;
+        padding: 0 16px;
+        font-size: 14px;
         cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        min-width: 54px;
       }
-
-      button.primary {
-        background: rgba(255, 255, 255, 0.12);
+      button:hover { background: rgba(255, 255, 255, 0.14); }
+      button:disabled { opacity: 0.55; cursor: not-allowed; }
+      .icon {
+        width: 18px;
+        height: 18px;
+        display: inline-block;
       }
-
-      button:disabled {
-        opacity: 0.55;
-        cursor: not-allowed;
-      }
-
-      .out {
-        margin-top: 14px;
-        border-top: 1px solid rgba(255, 255, 255, 0.08);
-        padding-top: 14px;
-      }
-
-      .hint {
-        margin-top: 8px;
-        color: var(--muted);
-        font-size: 12px;
-        line-height: 1.45;
-      }
-
       .status {
-        margin-top: 10px;
-        font-size: 12px;
+        margin-top: 12px;
+        font-size: 13px;
         color: var(--muted);
+        line-height: 1.4;
       }
-
-      .status.error {
-        color: rgba(255, 170, 170, 0.9);
+      .status.error { color: rgba(255, 170, 170, 0.92); }
+      .actions {
+        margin-top: 12px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
       }
-
+      .btnSecondary {
+        background: rgba(255, 255, 255, 0.06);
+      }
       .footer {
-        margin-top: 22px;
+        margin-top: 18px;
         font-size: 12px;
         color: var(--muted);
       }
-
-      a {
-        color: inherit;
-      }
+      a { color: inherit; }
     </style>
   </head>
   <body>
     <div class="wrap">
-      <div class="top">
-        <div>
-          <h1>WhatsApp UTM Builder</h1>
-          <p class="sub">
-            Paste any link → get the same link with
-            <span style="font-family: var(--mono)">utm_source=whatsapp</span> and
-            <span style="font-family: var(--mono)">utm_medium=status</span>.
-            Existing query params are preserved.
-          </p>
-        </div>
-        <div class="pill">default: whatsapp · status</div>
-      </div>
+      <h1>WhatsApp UTM Link</h1>
+      <p class="sub">Paste a link. Tap the arrow. We’ll auto-copy a version with <span style="font-family:var(--mono)">utm_source=whatsapp</span> and <span style="font-family:var(--mono)">utm_medium=status</span>.</p>
 
       <div class="card">
-        <div class="row">
-          <div>
-            <label for="inputUrl">URL</label>
-            <textarea id="inputUrl" placeholder="https://example.com/page"></textarea>
-          </div>
-          <div>
-            <label>UTM params (fixed)</label>
-            <div class="row" style="grid-template-columns: 1fr; gap: 10px">
-              <input id="utmSource" value="whatsapp" disabled />
-              <input id="utmMedium" value="status" disabled />
-            </div>
-            <div class="hint">
-              This tool always sets these two params. If the input already has
-              <span style="font-family: var(--mono)">utm_source</span> or
-              <span style="font-family: var(--mono)">utm_medium</span>, they will
-              be overwritten.
-            </div>
-          </div>
+        <div class="inputRow">
+          <textarea id="inputUrl" placeholder="Paste link here…"></textarea>
+          <button id="btnGo" title="Build + copy">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M5 12h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
         </div>
 
         <div class="actions">
-          <button class="primary" id="btnBuild">Build link</button>
-          <button id="btnCopy" disabled>Copy</button>
-          <button id="btnClear">Clear</button>
+          <button class="btnSecondary" id="btnShare" disabled title="Share to WhatsApp">
+            Share to WhatsApp
+          </button>
+          <button class="btnSecondary" id="btnClear" title="Clear">Clear</button>
         </div>
 
-        <div class="out">
-          <label for="outputUrl">Output</label>
-          <textarea id="outputUrl" placeholder="Generated link will appear here" readonly></textarea>
-          <div class="status" id="status"></div>
-          <div class="hint">
-            Tip: In WhatsApp Status, paste this output link. It will look normal
-            but will include UTM tracking.
-          </div>
-        </div>
-      </div>
-
-      <div class="footer">
-        Built for quick UTM tagging. No tracking happens here; it only edits the
-        URL.
+        <div class="status" id="status"></div>
+        <div class="footer">This page only edits the URL. It does not store anything.</div>
       </div>
     </div>
 
     <script>
       const elIn = document.getElementById('inputUrl')
-      const elOut = document.getElementById('outputUrl')
       const elStatus = document.getElementById('status')
-      const btnBuild = document.getElementById('btnBuild')
-      const btnCopy = document.getElementById('btnCopy')
+      const btnGo = document.getElementById('btnGo')
+      const btnShare = document.getElementById('btnShare')
       const btnClear = document.getElementById('btnClear')
+
+      let lastOut = ''
 
       function setStatus(msg, kind = 'info') {
         elStatus.textContent = msg || ''
@@ -254,64 +161,97 @@
 
       function buildUrl(raw) {
         const trimmed = String(raw || '').trim()
-        if (!trimmed) throw new Error('Paste a URL first')
+        if (!trimmed) throw new Error('Paste a link first')
 
         let u
         try {
           u = new URL(trimmed)
         } catch {
-          // Try adding https:// if user pasted without scheme
           u = new URL('https://' + trimmed)
         }
 
         u.searchParams.set('utm_source', 'whatsapp')
         u.searchParams.set('utm_medium', 'status')
-
         return u.toString()
       }
 
-      function onBuild() {
+      async function copyToClipboard(text) {
         try {
-          const out = buildUrl(elIn.value)
-          elOut.value = out
-          btnCopy.disabled = false
-          setStatus('Ready')
-        } catch (e) {
-          btnCopy.disabled = true
-          elOut.value = ''
-          setStatus(e?.message || 'Invalid URL', 'error')
+          await navigator.clipboard.writeText(text)
+          return true
+        } catch {
+          try {
+            const tmp = document.createElement('textarea')
+            tmp.value = text
+            tmp.style.position = 'fixed'
+            tmp.style.left = '-9999px'
+            document.body.appendChild(tmp)
+            tmp.focus()
+            tmp.select()
+            const ok = document.execCommand('copy')
+            document.body.removeChild(tmp)
+            return ok
+          } catch {
+            return false
+          }
         }
       }
 
-      async function onCopy() {
-        if (!elOut.value) return
+      async function onGo() {
         try {
-          await navigator.clipboard.writeText(elOut.value)
-          setStatus('Copied to clipboard')
-        } catch {
-          // fallback
-          elOut.focus()
-          elOut.select()
-          document.execCommand('copy')
-          setStatus('Copied')
+          const out = buildUrl(elIn.value)
+          lastOut = out
+          const copied = await copyToClipboard(out)
+          btnShare.disabled = false
+
+          if (copied) setStatus('Copied. Now tap “Share to WhatsApp”.')
+          else setStatus('Link created. Copy it manually from the address bar.', 'error')
+
+          // Open share panel when available
+          if (navigator.share) {
+            // Show native share sheet (browser share panel)
+            try {
+              await navigator.share({ title: 'WhatsApp link', url: out })
+            } catch {
+              // user cancelled; that's fine
+            }
+          }
+        } catch (e) {
+          lastOut = ''
+          btnShare.disabled = true
+          setStatus(e?.message || 'Invalid link', 'error')
         }
+      }
+
+      function onShare() {
+        if (!lastOut) return
+        // WhatsApp deep link (works on mobile; on desktop opens web.whatsapp)
+        const wa = `https://wa.me/?text=${encodeURIComponent(lastOut)}`
+        window.open(wa, '_blank', 'noopener,noreferrer')
       }
 
       function onClear() {
         elIn.value = ''
-        elOut.value = ''
-        btnCopy.disabled = true
+        lastOut = ''
+        btnShare.disabled = true
         setStatus('')
         elIn.focus()
       }
 
-      btnBuild.addEventListener('click', onBuild)
-      btnCopy.addEventListener('click', onCopy)
+      btnGo.addEventListener('click', onGo)
+      btnShare.addEventListener('click', onShare)
       btnClear.addEventListener('click', onClear)
 
-      // convenience: build on Ctrl/Cmd+Enter
+      // convenience: Enter builds, Ctrl/Cmd+Enter builds
       elIn.addEventListener('keydown', (e) => {
-        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') onBuild()
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault()
+          onGo()
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+          e.preventDefault()
+          onGo()
+        }
       })
     </script>
   </body>
