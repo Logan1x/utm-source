@@ -32,10 +32,16 @@
         max-width: none;
         margin: 0;
         padding: 44px 16px 20px;
-        height: 100svh;
+        height: var(--vvh, 100svh);
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
+      }
+
+      /* When the keyboard is open, stop bottom-aligning so inputs don't get covered */
+      body.keyboard-open .wrap {
+        justify-content: flex-start;
+        padding-top: 24px;
       }
 
       @media (min-width: 900px) {
@@ -192,6 +198,28 @@
       const btnClear = document.getElementById('btnClear')
 
       let lastOut = ''
+
+      // Mobile keyboard handling: keep layout within visual viewport
+      function updateViewportHeight() {
+        const vv = window.visualViewport
+        if (!vv) return
+        document.documentElement.style.setProperty('--vvh', `${vv.height}px`)
+      }
+      if (window.visualViewport) {
+        updateViewportHeight()
+        window.visualViewport.addEventListener('resize', updateViewportHeight)
+        window.visualViewport.addEventListener('scroll', updateViewportHeight)
+      }
+
+      elIn.addEventListener('focus', () => {
+        document.body.classList.add('keyboard-open')
+        // ensure visible
+        setTimeout(() => elIn.scrollIntoView({ block: 'center', behavior: 'smooth' }), 50)
+      })
+      elIn.addEventListener('blur', () => {
+        // small delay so clicks on buttons don't flicker
+        setTimeout(() => document.body.classList.remove('keyboard-open'), 150)
+      })
 
       function setStatus(msg, kind = 'info') {
         elStatus.textContent = msg || ''
