@@ -76,6 +76,26 @@
         padding: 14px;
         width: 100%;
       }
+
+      .topActions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 10px;
+      }
+
+      .btnPaste {
+        border-radius: 10px;
+        padding: 10px 14px;
+        background: rgba(255, 255, 255, 0.06);
+      }
+
+      /* Make submit (arrow) button more "white" */
+      #btnGo {
+        background: rgba(255, 255, 255, 0.18);
+      }
+      #btnGo:hover {
+        background: rgba(255, 255, 255, 0.22);
+      }
       .inputRow {
         display: grid;
         grid-template-columns: 1fr auto;
@@ -158,6 +178,12 @@
       </div>
 
       <div class="card">
+        <div class="topActions">
+          <button class="btnSecondary btnPaste" id="btnPaste" type="button" title="Paste whatever is in your clipboard">
+            Paste what’s copied
+          </button>
+        </div>
+
         <div class="inputRow">
           <textarea id="inputUrl" placeholder="Paste link here…"></textarea>
           <button id="btnGo" title="Build + copy">
@@ -196,6 +222,7 @@
       const btnGo = document.getElementById('btnGo')
       const btnShare = document.getElementById('btnShare')
       const btnClear = document.getElementById('btnClear')
+      const btnPaste = document.getElementById('btnPaste')
 
       let lastOut = ''
 
@@ -220,6 +247,24 @@
         // small delay so clicks on buttons don't flicker
         setTimeout(() => document.body.classList.remove('keyboard-open'), 150)
       })
+
+      async function onPaste() {
+        try {
+          const text = await navigator.clipboard.readText()
+          if (!text?.trim()) {
+            setStatus('Clipboard is empty', 'error')
+            return
+          }
+          elIn.value = text
+          setStatus('Pasted')
+          // Optional: build immediately after paste
+          // onGo()
+        } catch {
+          setStatus('Paste not allowed by browser. Long-press in the input and paste.', 'error')
+        }
+      }
+
+      btnPaste.addEventListener('click', onPaste)
 
       function setStatus(msg, kind = 'info') {
         elStatus.textContent = msg || ''
