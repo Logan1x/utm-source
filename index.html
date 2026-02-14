@@ -31,17 +31,19 @@
         width: 100%;
         max-width: none;
         margin: 0;
-        padding: 44px 16px 36px; /* extra gap from bottom */
+        /* Keep content around the middle, but leave space at bottom for the keyboard */
+        padding: 44px 16px 140px;
         height: var(--vvh, 100svh);
         display: flex;
         flex-direction: column;
-        justify-content: flex-end;
+        justify-content: center;
       }
 
       /* When the keyboard is open, stop bottom-aligning so inputs don't get covered */
       body.keyboard-open .wrap {
         justify-content: flex-start;
         padding-top: 24px;
+        padding-bottom: 24px;
       }
 
       @media (min-width: 900px) {
