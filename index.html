@@ -26,9 +26,20 @@
         color: var(--text);
       }
       .wrap {
-        max-width: 900px;
-        margin: 0 auto;
-        padding: 36px 18px 72px;
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        padding: 44px 16px 24px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+      }
+
+      @media (min-width: 900px) {
+        .wrap {
+          padding: 64px 24px 32px;
+        }
       }
       h1 {
         margin: 0;
@@ -41,12 +52,21 @@
         color: var(--muted);
         line-height: 1.45;
       }
+
+      /* On mobile, keep the UI reachable (bottom aligned via .wrap). */
+      @media (max-width: 720px) {
+        .sub {
+          margin-bottom: 12px;
+        }
+      }
+
       .card {
         margin-top: 18px;
         border: 1px solid var(--border);
         background: var(--panel);
         border-radius: 10px;
         padding: 14px;
+        width: 100%;
       }
       .inputRow {
         display: grid;
@@ -123,8 +143,10 @@
   </head>
   <body>
     <div class="wrap">
-      <h1>WhatsApp UTM Link</h1>
-      <p class="sub">Paste a link. Tap the arrow. We’ll auto-copy a version with <span style="font-family:var(--mono)">utm_source=whatsapp</span> and <span style="font-family:var(--mono)">utm_medium=status</span>.</p>
+      <div>
+        <h1>WhatsApp UTM Link</h1>
+        <p class="sub">Paste a link. Tap the arrow. We’ll auto-copy a version with <span style="font-family:var(--mono)">utm_source=whatsapp</span> and <span style="font-family:var(--mono)">utm_medium=status</span>.</p>
+      </div>
 
       <div class="card">
         <div class="inputRow">
